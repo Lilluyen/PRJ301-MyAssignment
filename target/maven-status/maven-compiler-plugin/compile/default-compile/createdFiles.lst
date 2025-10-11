@@ -1,0 +1,7 @@
+model\Role.class
+model\BaseModel.class
+dal\DBContext.class
+controller\auth\BaseAuthentiCation.class
+controller\auth\LoginController.class
+model\Division.class
+model\User.class
