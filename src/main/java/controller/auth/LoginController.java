@@ -16,7 +16,6 @@ public class LoginController extends BaseAuthentiCation {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        String sql = "SELECT * FROM [User] WHERE username = ? AND password = ?";
     }
 
     @Override
