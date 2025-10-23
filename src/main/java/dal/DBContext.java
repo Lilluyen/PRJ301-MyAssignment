@@ -4,14 +4,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public abstract class DBContext <T extends model.BaseModel> {
+import model.BaseModel;
+
+public abstract class DBContext <T extends BaseModel> {
     protected Connection connection;
 
     public DBContext() {
         
         String user = "lilluyen";
         String password = "123";
-        String url = "jdbc:sqlserver://MSI:1433;databaseName=SonntCompany;encrypt=true;trustServerCertificate=true";
+        String url = "jdbc:sqlserver://MSI:1433;databaseName=PRJ_Assignment;encrypt=true;trustServerCertificate=true";
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = java.sql.DriverManager.getConnection(url, user, password);
