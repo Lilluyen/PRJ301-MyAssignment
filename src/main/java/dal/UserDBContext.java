@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Division;
 import model.Employee;
 import model.iam.User;
 
@@ -29,8 +30,11 @@ public class UserDBContext extends DBContext<User>{
                                      \t    ,e.fullName
                                      \t    ,e.dateOfBirth
                                      \t    ,e.gender
+                                           ,d.departmentID
+                                           ,d.[name]
                                      FROM [User] as u JOIN [Erollment] as er ON u.userID = er.userID
                                        JOIN [Employee] as e ON e.employeeID = er.employeeID
+                                       JOIN [Division] as d ON d.departmentID = e.departmentID
                                      WHERE [userName] = ? AND [password] = ?""";
             
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -48,6 +52,12 @@ public class UserDBContext extends DBContext<User>{
                 employee.setFullName(rs.getString("fullName"));
                 employee.setDob(rs.getDate("dateOfBirth"));
                 employee.setGender(rs.getBoolean("gender"));
+                
+                Division division = new Division();
+                division.setId(rs.getInt("departmentID"));
+                division.setDepartmentName(rs.getString("name"));
+                employee.setDivision(division);
+                
                 user.setEmployee(employee);
                 return user;
             }
