@@ -6,14 +6,12 @@ package controller.request;
 
 import controller.iam.BaseAuthorizationController;
 import dal.DivisionDBContext;
-import dal.RequestForLeaveDBContext;
 import dal.RoleDBContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import model.Division;
 import model.RequestForLeave;
@@ -24,37 +22,30 @@ import model.iam.User;
  *
  * @author tdgg
  */
-@WebServlet(urlPatterns = "/request/create")
-public class CreateController extends BaseAuthorizationController {
-    
+@WebServlet(urlPatterns = "/request/employee-review")
+public class EmployeeReviewController extends BaseAuthorizationController{
+
     @Override
     protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        RequestForLeave requestForLeave = new RequestForLeave();
-        
-        requestForLeave.setCreatedBy(user.getEmployee());
-        
-        Role role = new Role();
-        role.setId(Integer.parseInt(req.getParameter("role")));
-        requestForLeave.setRole(role);
-        requestForLeave.setFromDate(Date.valueOf(req.getParameter("fromDate")));
-        requestForLeave.setToDate(Date.valueOf(req.getParameter("toDate")));
-        requestForLeave.setReason(req.getParameter("reason"));
-        requestForLeave.setStatus(0);
-        
-        RequestForLeaveDBContext db = new RequestForLeaveDBContext();
-        db.insert(requestForLeave);
-        resp.sendRedirect(req.getContextPath() + "/request/list");
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     @Override
     protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         DivisionDBContext divisionDB = new DivisionDBContext();
         RoleDBContext roleDB = new RoleDBContext();
+        
+        RequestForLeave requestInfo = (RequestForLeave)req.getAttribute("requestInfo");
+        
         ArrayList<Division> listDivisions = divisionDB.list();
-        ArrayList<Role> listRoles = roleDB.getRolesByUserIDNotDuplicate(user.getId());
+        ArrayList<Role> listRoles = roleDB.getRolesByUserIDNotDuplicate(requestInfo.getCreatedBy().getId());
+        
+        
+        req.setAttribute("display", "display: none;");
         req.setAttribute("divisions", listDivisions);
         req.setAttribute("roles", listRoles);
-        req.getRequestDispatcher("/views/request/create.jsp").forward(req, resp);
+        req.setAttribute("info", requestInfo);
+        req.getRequestDispatcher("/views/request/review.jsp").forward(req, resp);
     }
     
 }

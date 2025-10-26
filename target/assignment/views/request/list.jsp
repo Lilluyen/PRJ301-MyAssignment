@@ -64,7 +64,7 @@
             <table border="1">
                 <thead>
                     <tr>
-                        <th>Request ID</th>
+                        <th>No</th>
                         <th>Employee Name</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -77,9 +77,9 @@
                 </thead>
                 <tbody>
                     <%-- Sample data row --%>
-                    <c:forEach var="r" items="${requestScope.requestList}">
+                    <c:forEach var="r" items="${requestScope.requestList}" varStatus="loop">
                         <tr>
-                            <td>${r.id}</td>
+                            <td>${loop.index + 1}</td>
                             <td>${r.createdBy.fullName}</td>
                             <td>${r.fromDate}</td>
                             <td>${r.toDate}</td>

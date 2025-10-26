@@ -14,13 +14,22 @@
         <link href="/company/css/review.css" rel="stylesheet" type="text/css"/>
         <title>Review - Request For Leave</title>
 
-        
+        <script>
+            function edit() {
+                document.getElementById("fromDate").disabled = false;
+                document.getElementById("toDate").disabled = false;
+                document.getElementById("reason").disabled = false;
+                document.getElementById("role").disabled = false;
+                document.getElementById("department").disabled = false;
+                document.querySelector(".sendEdit").style.display = "block";
+            }
+        </script>
     </head>
     <body>
         <div class="create-request">
 
             <h2>Leave Request Form</h2>
-            <form action="review" method="post">
+            <form action="edit" method="post">
 
                 <input type="hidden" name="requestforleaveId" id="requestforleaveId" value="${requestScope.info.id}"/>
                 <div class="form-group">
@@ -84,6 +93,10 @@
                     </div>
 
                 </div>
+                <div class="edit-button" style="${requestScope.displayblock}">
+                    <button type="button" onclick="edit()">Edit</button>
+                </div>
+                    <input type="submit" value="Send" class="sendEdit">
 
             </form>
         </div>

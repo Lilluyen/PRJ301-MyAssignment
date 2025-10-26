@@ -3,18 +3,10 @@ package model;
 import java.util.Date;
 
 public class RequestForLeave extends BaseModel{
-//    [requestID]
-//      ,[createdBy]
-//      ,[createdTime]
-//      ,[fromDate]
-//      ,[toDate]
-//      ,[reason]
-//      ,[status]
-//      ,[processedBy]
-//      ,[processedTime]
-//      ,[processNote]
+
     
     private Employee createdBy;
+    private model.iam.Role role;
     private java.util.Date createdTime;
     private java.sql.Date fromDate;
     private java.sql.Date toDate;
@@ -24,6 +16,9 @@ public class RequestForLeave extends BaseModel{
     private java.util.Date processedTime;
     private String note;
 
+    
+    
+    
     public Employee getCreatedBy() {
         return createdBy;
     }
@@ -31,6 +26,15 @@ public class RequestForLeave extends BaseModel{
     public void setCreatedBy(Employee createdBy) {
         this.createdBy = createdBy;
     }
+
+    public model.iam.Role getRole() {
+        return role;
+    }
+
+    public void setRole(model.iam.Role role) {
+        this.role = role;
+    }
+    
 
     public Date getCreatedTime() {
         return createdTime;
