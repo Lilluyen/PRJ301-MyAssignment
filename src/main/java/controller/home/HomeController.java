@@ -26,7 +26,7 @@ public class HomeController extends BaseAuthenticationController {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException {
-        request.getRequestDispatcher("/views/home/home.html").forward(request, response);
+        request.getRequestDispatcher("/views/home/home.jsp").forward(request, response);
     }
 
 }

@@ -4,6 +4,9 @@
  */
 package controller.request;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import controller.iam.BaseAuthorizationController;
 import dal.DivisionDBContext;
 import dal.RoleDBContext;
@@ -11,8 +14,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
 import model.Division;
 import model.RequestForLeave;
 import model.iam.Role;
@@ -42,6 +43,7 @@ public class EmployeeReviewController extends BaseAuthorizationController{
         
         
         req.setAttribute("display", "display: none;");
+        req.setAttribute("displayMess", "display: block !important;");
         req.setAttribute("divisions", listDivisions);
         req.setAttribute("roles", listRoles);
         req.setAttribute("info", requestInfo);

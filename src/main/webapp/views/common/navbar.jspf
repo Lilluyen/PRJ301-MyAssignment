@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/company/home">Cambodia Company</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto navbar-list">
+                <li class="nav-item nav-item-request">
+                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/home.jsp') ? 'active' : ''}"
+                       href="/company/home">Home</a>
+                </li>
+                <li class="nav-item nav-item-request">
+                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/create.jsp') ? 'active' : ''}"
+                       href="/company/request/create">Create</a>
+                </li>
+                <li class="nav-item nav-item-request">
+                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/list.jsp') 
+                    || pageContext.request.requestURI.contains('/review.jsp')
+                    ? 'active' : ''}"
+                       href="/company/request/list">View</a>
+                </li>
+                <li class="nav-item nav-item-request">
+                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/edit.jsp') ? 'active' : ''}"
+                       href="/company/request/edit">Edit</a>
+                </li>
+                <form action="${pageContext.request.contextPath}/logout" method="post" style="display:inline;" class="nav-item nav-item-logout">
+                    <button type="submit" class="nav-link btn btn-link" style="text-decoration:none;">Logout
+                    </button>
+                </form>
+
+            </ul>
+        </div>
+    </div>
+</nav>

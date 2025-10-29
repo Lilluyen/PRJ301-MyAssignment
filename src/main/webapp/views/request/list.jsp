@@ -11,18 +11,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link href="/company/css/background.css" rel="stylesheet" type="text/css"/>
+        <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
         <style>
             .list-table {
                 text-align: center;
                 margin-top: 145px;
-                /* background-color: #ffffff; */
+                background-color: #ffffff;
                 padding: 20px 30px 45px;
                 border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+                background: rgba(255, 255, 255, 0.8);
                 backdrop-filter: blur(10px);
-                color: white;
-                background-color: rgba(255, 255, 255, 0.1);
+                color: black;
             }
             table {
                 width: 100%;
@@ -34,14 +37,15 @@
                 text-align: center;
             }
             th {
-                backdrop-filter: blur(10px);
+                background-color: #4CAF50;
+                color: white;
             }
 
             tr:nth-child(even) {
-                backdrop-filter: blur(10px);
+                background-color: #f2f2f2;
             }
 
-            a {
+            .btn-info {
                 color: #ffffff;
                 text-decoration: none;
                 display: block;
@@ -52,13 +56,39 @@
                 border-radius: 4px;
                 cursor: pointer;
             }
-            a:hover {
-                background-color: #45a049;
+            .btn-info:hover {
+                background-color: #000000ff;
+                color: #ffffff;
             }
+
+            /* ===== Footer ===== */
+.footer {
+    background: linear-gradient(135deg, #ffffff, #4ca1af);
+    color: #000000;
+    text-align: center;
+    padding: 25px 10px;
+    font-size: 0.95rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 65px;
+}
+
+.footer p {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.footer p span {
+    color: #f5c542;
+}
         </style>
         <title>List - Request For Leave</title>
     </head>
     <body>
+
+        <%@ include file="../common/navbar.jspf" %>
+
         <div class="list-table">
             <h2>List - Request For Leave</h2>
             <table border="1">
@@ -73,6 +103,7 @@
                         <th>Processed By</th>
                         <th>Processed Time</th>
                         <th>Note</th>
+                        <th>View Detail</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,12 +123,21 @@
                             <td>${r.processedBy.fullName}</td>
                             <td>${r.processedTime}</td>
                             <td>${r.note}</td>
-                            <td><a href="review?id=${r.id}">View Details</a></td>
+                            <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a></td>
                         </tr>
                     </c:forEach>
                     <%-- Additional rows would be populated here dynamically --%>
                 </tbody>
             </table>      
         </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
+            </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     </body>
 </html>

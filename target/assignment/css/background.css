@@ -1,10 +1,9 @@
- body{
-height: 100vh;
-background-size: 100% 100%;
-background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
-background-image: radial-gradient(49% 81% at 45% 47%, #10101045 0%, #0000F900 100%),
-                    radial-gradient(113% 91% at 17% -2%, #000000FF 0%, #FF000000 99%),
-                    radial-gradient(142% 91% at 83% 7%, #1C0909FF 1%, #FF000000 99%),
-                    radial-gradient(142% 91% at -6% 74%, #090808FF 1%, #FF000000 99%),
-                    radial-gradient(142% 91% at 111% 84%, #000000FF 0%, #DB8DF0FF 83%);
+ body {
+     height: 100vh;
+     background-size: 100% 100%;
+     background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+     background: linear-gradient(135deg, #ffffff, #f5f7fa, #4ca1af);
+     background-repeat: no-repeat;
+     background-attachment: fixed;
+     background-size: cover;
  }

@@ -1,4 +1,6 @@
 controller\home\HomeController.class
+controller\request\SupervisorReviewController.class
+dal\DivisionDBContext.class
 dal\RoleDBContext.class
 controller\iam\BaseAuthorizationController.class
 controller\request\ReviewController.class
@@ -6,10 +8,14 @@ dal\UserDBContext.class
 model\BaseModel.class
 dal\DBContext.class
 model\Division.class
+controller\request\ModifyController.class
 model\iam\User.class
+controller\iam\BaseAuthenticationController.class
 controller\request\ListController.class
 dal\RequestForLeaveDBContext.class
 model\iam\Role.class
+controller\auth\LogoutController.class
+controller\request\EmployeeReviewController.class
 model\iam\Feature.class
 controller\request\CreateController.class
 model\Employee.class
