@@ -20,15 +20,15 @@
 
 
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
 
         <%@ include file="../common/navbar.jspf" %>
 
-        <div class="create-request container">
+        <div class="create-request container flex-fill">
 
             <h2>Review Leave Request Form</h2>
             <div class="row">
-                <form action="review" method="post" class="col-md-6 form-container">
+                <form class="col-md-6 form-container">
 
                     <input type="hidden" name="requestforleaveId" id="requestforleaveId" value="${requestScope.info.id}"/>
                     <div class="form-group">
@@ -89,21 +89,24 @@
                     </p>
                     <img src="/company/img/nghiphep.svg" alt="Review Leave Image" class="img-fluid"/>
                     <div class="form-submit" style="${requestScope.display}">
-                        <div class="form-group">
-                            <label for="note">Note:</label>
-                            <textarea id="note" name="note"></textarea>
-                        </div>
-                        <div class="submit-button">
-                            <input type="submit" value="Approve">
-                            <input type="submit" value="Reject">
-                        </div>
+                        <form action="supervisor-review" method="post">
+                            <div class="form-group">
+                                <label for="note">Note:</label>
+                                <textarea id="note" name="note"></textarea>
+                            </div>
+                            <div class="submit-button">
+                                <input type="hidden" name="id" value="${requestScope.info.id}"/>
+                                <input type="submit" value="Approve" name="action">
+                                <input type="submit" value="Reject" name="action">
+                            </div>
+                        </form>
 
                     </div>
                 </section>
             </div>
         </div>
 
-        <footer class="footer">
+        <footer class="footer mt-auto">
             <div class="container">
                 <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
             </div>

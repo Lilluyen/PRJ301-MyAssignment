@@ -4,13 +4,16 @@
  */
 package dal;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import model.RequestForLeave;
-import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.Division;
 import model.Employee;
+import model.RequestForLeave;
 import model.iam.Role;
 
 /**
@@ -193,6 +196,33 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
     public void update(RequestForLeave model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+
+    public void updateReview(RequestForLeave model) {
+        String sql = """
+                                 UPDATE [RequestForLeave]
+                                    SET [status] = ?
+                                       ,[processedTime] = ?
+                                       ,[processedBy] = ?
+                                       ,[processNote] = ?
+                                  WHERE requestID = ?""";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, model.getStatus());
+            model.setProcessedTime(new java.util.Date());
+            stm.setTimestamp(2, new java.sql.Timestamp(model.getProcessedTime().getTime()));
+            stm.setInt(3, model.getProcessedBy().getId());
+            stm.setString(4, model.getNote());
+            stm.setInt(5, model.getId());
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeConnection();
+        }
+    }
+
+
 
     @Override
     public void delete(int id) {

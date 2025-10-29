@@ -85,11 +85,11 @@
         </style>
         <title>List - Request For Leave</title>
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
 
         <%@ include file="../common/navbar.jspf" %>
 
-        <div class="list-table">
+        <div class="list-table container flex-fill">
             <h2>List - Request For Leave</h2>
             <table border="1">
                 <thead>
@@ -131,7 +131,7 @@
             </table>      
         </div>
 
-        <footer class="footer">
+        <footer class="footer mt-auto">
             <div class="container">
                 <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
             </div>
