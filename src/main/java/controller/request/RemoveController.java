@@ -11,16 +11,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import model.RequestForLeave;
 import model.iam.User;
 
 /**
  *
  * @author tdgg
  */
-@WebServlet(urlPatterns = "/request/modify")
-public class ModifyController extends BaseAuthorizationController {
+@WebServlet(urlPatterns = "/request/remove")
+public class RemoveController extends BaseAuthorizationController {
 
     @Override
     protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
@@ -33,12 +31,10 @@ public class ModifyController extends BaseAuthorizationController {
     }
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        int userId = user.getId();
-
-        RequestForLeaveDBContext leaveDB = new RequestForLeaveDBContext();
-        ArrayList<RequestForLeave> leavesRequestList = leaveDB.getByEmployee(userId);
-        req.setAttribute("requestList", leavesRequestList);
-        req.getRequestDispatcher("/views/request/list_edit.jsp").forward(req, resp);
+        int requestId = Integer.parseInt(req.getParameter("id"));
+        RequestForLeaveDBContext db = new RequestForLeaveDBContext();
+        db.delete(requestId);
+        resp.sendRedirect(req.getContextPath() + "/request/modify");
     }
 
 }

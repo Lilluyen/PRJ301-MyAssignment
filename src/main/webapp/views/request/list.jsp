@@ -12,25 +12,30 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link href="/company/css/background.css" rel="stylesheet" type="text/css"/>
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
         <style>
             .list-table {
                 text-align: center;
-                margin-top: 145px;
+                margin-top: 130px;
                 background-color: #ffffff;
-                padding: 20px 30px 45px;
+                padding: 20px 30px 0 30px;
                 border-radius: 8px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
                 background: rgba(255, 255, 255, 0.8);
                 backdrop-filter: blur(10px);
                 color: black;
+                box-sizing: border-box;
             }
+            h2{
+                margin-top: 35px;
+            }
+            
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 20px;
+                margin-top: 35px;
             }
             th, td {
                 padding: 8px 12px;
@@ -60,28 +65,32 @@
                 background-color: #000000ff;
                 color: #ffffff;
             }
+            
+            .message-table{
+                margin-top: 10%;
+            }
 
             /* ===== Footer ===== */
-.footer {
-    background: linear-gradient(135deg, #ffffff, #4ca1af);
-    color: #000000;
-    text-align: center;
-    padding: 25px 10px;
-    font-size: 0.95rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 65px;
-}
+            .footer {
+                background: linear-gradient(135deg, #ffffff, #4ca1af);
+                color: #000000;
+                text-align: center;
+                padding: 25px 10px;
+                font-size: 0.95rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                margin-top: 65px;
+            }
 
-.footer p {
-    margin: 0;
-    padding: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
+            .footer p {
+                margin: 0;
+                padding: 0;
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
 
-.footer p span {
-    color: #f5c542;
-}
+            .footer p span {
+                color: #f5c542;
+            }
         </style>
         <title>List - Request For Leave</title>
     </head>
@@ -107,28 +116,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%-- Sample data row --%>
-                    <c:forEach var="r" items="${requestScope.requestList}" varStatus="loop">
-                        <tr>
-                            <td>${loop.index + 1}</td>
-                            <td>${r.createdBy.fullName}</td>
-                            <td>${r.fromDate}</td>
-                            <td>${r.toDate}</td>
-                            <td>${r.reason}</td>
-                            <td>
-                                ${r.status eq 0?"Processing":
-                                  r.status eq 1?"Approved":"Rejected"
-                                }
-                            </td>
-                            <td>${r.processedBy.fullName}</td>
-                            <td>${r.processedTime}</td>
-                            <td>${r.note}</td>
-                            <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a></td>
-                        </tr>
-                    </c:forEach>
-                    <%-- Additional rows would be populated here dynamically --%>
+                    <c:if test="${not empty requestScope.requestList}">
+                        <%-- Sample data row --%>
+                        <c:forEach var="r" items="${requestScope.requestList}" varStatus="loop">
+                            <tr>
+                                <td>${loop.index + 1}</td>
+                                <td>${r.createdBy.fullName}</td>
+                                <td>${r.fromDate}</td>
+                                <td>${r.toDate}</td>
+                                <td>${r.reason}</td>
+                                <td>
+                                    ${r.status eq 0?"Processing":
+                                      r.status eq 1?"Approved":"Rejected"
+                                    }
+                                </td>
+                                <td>${r.processedBy.fullName}</td>
+                                <td>${r.processedTime}</td>
+                                <td>${r.note}</td>
+                                <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a></td>
+                            </tr>
+                        </c:forEach>
+                        <%-- Additional rows would be populated here dynamically --%>
+                    </c:if>
                 </tbody>
-            </table>      
+            </table>   
+            <h3 class="message-table"><c:if test="${empty requestScope.requestList}">No request is available</c:if></h3>
         </div>
 
         <footer class="footer mt-auto">
@@ -137,7 +149,7 @@
             </div>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     </body>
 </html>

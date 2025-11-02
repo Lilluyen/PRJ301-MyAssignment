@@ -28,6 +28,7 @@
                 color: black;
                 box-sizing: border-box;
             }
+            
             h2{
                 margin-top: 35px;
             }
@@ -35,12 +36,13 @@
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 35px;
+                margin-top: 20px;
             }
             th, td {
                 padding: 8px 12px;
                 text-align: center;
             }
+
             th {
                 background-color: #4CAF50;
                 color: white;
@@ -50,7 +52,7 @@
                 background-color: #f2f2f2;
             }
 
-            .btn-info {
+            .btn {
                 color: #ffffff;
                 text-decoration: none;
                 display: block;
@@ -61,9 +63,13 @@
                 border-radius: 4px;
                 cursor: pointer;
             }
-            .btn-info:hover {
+            .btn:hover {
                 background-color: #000000ff;
                 color: #ffffff;
+            }
+
+            .btn-cancel{
+                background-color: red;
             }
             
             .message-table{
@@ -113,6 +119,7 @@
                         <th>Processed Time</th>
                         <th>Note</th>
                         <th>View Detail</th>
+                        <th>Cancel</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -133,13 +140,14 @@
                                 <td>${r.processedBy.fullName}</td>
                                 <td>${r.processedTime}</td>
                                 <td>${r.note}</td>
-                                <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a></td>
+                                <td><a href="edit?id=${r.id}" class="btn btn-edit">Edit</a></td>
+                                <td><a href="remove?id=${r.id}" class="btn btn-cancel">Cancel</a></td>
                             </tr>
                         </c:forEach>
                         <%-- Additional rows would be populated here dynamically --%>
                     </c:if>
                 </tbody>
-            </table>   
+            </table>      
             <h3 class="message-table"><c:if test="${empty requestScope.requestList}">No request is available</c:if></h3>
         </div>
 
