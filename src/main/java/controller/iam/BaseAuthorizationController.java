@@ -46,7 +46,7 @@ public abstract class BaseAuthorizationController extends BaseAuthenticationCont
         if (isAuthorized(user, request)) {
             processPost(request, response, user);
         } else {
-            request.setAttribute("message", "Access denined");
+            request.getSession().setAttribute("message", "denied");
             response.sendRedirect(request.getContextPath() + "/home");
         }
     }
@@ -56,7 +56,7 @@ public abstract class BaseAuthorizationController extends BaseAuthenticationCont
         if (isAuthorized(user, request)) {
             processGet(request, response, user);
         } else {
-            request.setAttribute("message", "Access denined");
+            request.getSession().setAttribute("message", "denied");
             response.sendRedirect(request.getContextPath() + "/home");
         }
     }

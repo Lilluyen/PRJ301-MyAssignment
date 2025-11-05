@@ -10,7 +10,7 @@ body {
 
 /* ===== Navbar ===== */
 .navbar {
-    background: linear-gradient(135deg, #4ca1af,  #b8dee4) !important;
+    background: linear-gradient(135deg, #007bff, #00bcd4) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
     padding: 20px 0;
 }
@@ -52,7 +52,8 @@ body {
     padding: 130px 20px;
     position: relative;
     overflow: hidden;
-    margin-top: 80px;
+/*    margin-top: 80px;
+    margin-bottom: 50px;*/
 }
 
 .hero::after {
@@ -104,24 +105,23 @@ body {
 
 /* ===== Footer ===== */
 .footer {
-    background: linear-gradient(135deg, #ffffff, #4ca1af);
-    color: #000000;
+    background: linear-gradient(135deg, #007bff, #00bcd4);
+    color: white;
     text-align: center;
     padding: 25px 10px;
     font-size: 0.95rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 65px;
+    margin-top: auto;
 }
 
 .footer p {
     margin: 0;
-    padding: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
-.footer p span {
-    color: #f5c542;
+.footer span {
+    color: #ffe082;
 }
 
 /* ===== Animation ===== */

@@ -1,159 +1,354 @@
-/* Tổng thể trang */
-body {
-    font-family: "Segoe UI", Roboto, sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+/* ========== RESET & BASE STYLE ========== */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Khối chính giữa trang */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/*.container {
+    margin-top: 50px;
+    flex: 1;
+}*/
+
+/* ========== CREATE FORM SECTION ========== */
 .create-request {
-    /* max-width: 650px; */
-    margin: 60px auto;
     background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
     padding: 40px 50px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .create-request:hover {
-    /* transform: translateY(-3px); */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
-.create-request form {
-    padding: 35px;
-}
-
-/* Tiêu đề */
 .create-request h2 {
     text-align: center;
-    color: #19cec7;
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-    border-bottom: 3px solid #19cec7;
-    display: block;
-    padding-bottom: 20px;
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: #007bff;
+    margin-bottom: 35px;
+    position: relative;
 }
 
-/* Mỗi nhóm form */
+.create-request h2::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: #00bcd4;
+    margin: 12px auto 0;
+    border-radius: 5px;
+}
+
+/* ========== FORM INPUTS ========== */
 .form-group {
-    display: flex;
-    flex-direction: column;
     margin-bottom: 20px;
 }
 
-/* Label */
 label {
-    font-weight: 600;
-    margin-bottom: 6px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    display: block;
     color: #444;
 }
 
-/* Input và select */
 input[type="text"],
 input[type="date"],
 select,
 textarea {
+    width: 100%;
     padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: none;
+    border-radius: 8px;
     font-size: 1rem;
     background-color: #fafafa;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: all 0.25s ease;
+    font-weight: 500;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    border-color: #1a73e8;
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
-    outline: none;
+    border-color: #007bff;
     background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    outline: none;
 }
 
-/* Textarea */
 textarea {
     min-height: 100px;
     resize: vertical;
 }
 
-/* Nút submit */
+/* ========== SUBMIT BUTTON ========== */
 input[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 12px 0;
-    background-color: #16b9e2;
+    background-color: #007bff;
     color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
     border: none;
-    border-radius: 6px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    margin-top: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-top: 15px;
 }
 
 input[type="submit"]:hover {
-    background-color: #283593;
+    background-color: #0056b3;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 input[type="submit"]:active {
     transform: translateY(1px);
 }
 
-/* message */
-
+/* ========== NOTE (RIGHT SIDE) ========== */
 .response-message {
-    margin-top: 30px;
-    padding: 35px;
-    border-left: 2px solid #19cec7;
-    border-radius: 4px;
+    background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    border-left: 1px solid #007bff;
+    border-radius: 15px;
+    padding: 25px;
     color: #0d47a1;
-    text-align: justify;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .response-message p {
-    background-color: rgb(227, 242, 253);
-    margin: 0 0 10px 0;
-    font-size: 1rem;
-    line-height: 1.5;
-    padding: 10px;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.response-message img {
+    border-radius: 10px;
+    max-width: 100%;
+    margin-top: 10px;
+}
+
+/* ========== TABLE SECTION ========== */
+.list-table {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    margin-bottom: 50px;
+}
+
+.list-table h2 {
+    text-align: center;
+    color: #007bff;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+thead {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+tbody tr:hover {
+    background-color: #f1f5ff;
+}
+
+/* ===== Status Colors ===== */
+td.status {
+    font-weight: 600;
+    border-radius: 5px;
+}
+.status.processing {
+    color: #ff9800;
+}
+.status.approved {
+    color: #28a745;
+}
+.status.rejected {
+    color: #dc3545;
+}
+
+/* ========== BUTTONS IN TABLE ========== */
+.btn-edit,
+.btn-cancel {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.btn-edit {
+    background-color: #28a745;
+}
+
+.btn-edit:hover {
+    background-color: #218838;
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+/* ========== EMPTY TABLE MESSAGE ========== */
+.message-table {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* ============================= */
+/* Pagination - Version 2 (Modern) */
+/* ============================= */
+
+.pagger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.pagination-form {
+    display: inline-block;
+}
+
+.pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.page-item {
+    margin: 0;
+}
+
+.page-link {
+    display: block;
+    padding: 8px 14px;
+    color: #007bff;
+    background-color: white;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.page-link:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+
+.page-item .page-link[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ===== Footer ===== */
 .footer {
-    background: linear-gradient(135deg, #ffffff, #4ca1af);
-    color: #000000;
+    background: linear-gradient(135deg, #007bff, #00bcd4);
+    color: white;
     text-align: center;
     padding: 25px 10px;
     font-size: 0.95rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 65px;
+    margin-top: auto;
 }
 
 .footer p {
     margin: 0;
-    padding: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
-.footer p span {
-    color: #f5c542;
+.footer span {
+    color: #ffe082;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
+header, footer{
+    animation: fadeInUp 0.7s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
     .create-request {
-        padding: 25px 20px;
+        padding: 25px;
     }
 
     .create-request h2 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+    }
+
+    .response-message {
+        margin-top: 20px;
+    }
+
+    th, td {
+        font-size: 0.85rem;
+        padding: 10px;
     }
 }

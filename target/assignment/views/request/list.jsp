@@ -16,38 +16,62 @@
         <link href="/company/css/background.css" rel="stylesheet" type="text/css"/>
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
         <style>
+
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: #333;
+            }
             .list-table {
                 text-align: center;
-                margin-top: 130px;
+                margin-top: 70px;
+                margin-bottom: 50px;
                 background-color: #ffffff;
-                padding: 20px 30px 0 30px;
+                padding: 20px 30px 70px 30px;
                 border-radius: 8px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
                 background: rgba(255, 255, 255, 0.8);
                 backdrop-filter: blur(10px);
                 color: black;
                 box-sizing: border-box;
+                position: relative;
             }
             h2{
                 margin-top: 35px;
             }
-            
+
+            /* ===== Table ===== */
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 35px;
+                margin-top: 25px;
+                background-color: #ffffff;
             }
+
             th, td {
-                padding: 8px 12px;
                 text-align: center;
+                padding: 12px 10px;
+                border: 1px solid #dee2e6;
+                font-weight: 500;
             }
+
             th {
-                background-color: #4CAF50;
+                background-color: #007bff;
                 color: white;
+                font-weight: 600;
             }
 
             tr:nth-child(even) {
-                background-color: #f2f2f2;
+                background-color: #f9fbfd;
+            }
+
+            tr:hover {
+                background-color: #eef3ff;
+            }
+
+            td:first-child {
+                font-weight: 600;
+                color: #2b2b2b;
             }
 
             .btn-info {
@@ -65,39 +89,78 @@
                 background-color: #000000ff;
                 color: #ffffff;
             }
-            
+
             .message-table{
                 margin-top: 10%;
             }
 
+
+            /* ===== Status Colors ===== */
+            td.status {
+                font-weight: 600;
+                border-radius: 5px;
+            }
+            .status.processing {
+                color: #ff9800;
+            }
+            .status.approved {
+                color: #28a745;
+            }
+            .status.rejected {
+                color: #dc3545;
+            }
+
+            .pagger{
+                position: absolute;
+                bottom: 15px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            header, footer{
+                animation: fadeInUp 0.7s ease forwards;
+            }
+
+
             /* ===== Footer ===== */
             .footer {
-                background: linear-gradient(135deg, #ffffff, #4ca1af);
-                color: #000000;
+                background: linear-gradient(135deg, #007bff, #00bcd4);
+                color: white;
                 text-align: center;
                 padding: 25px 10px;
                 font-size: 0.95rem;
                 border-top: 1px solid rgba(255, 255, 255, 0.08);
-                margin-top: 65px;
+                margin-top: auto;
             }
 
             .footer p {
                 margin: 0;
-                padding: 0;
-                font-size: 1.2rem;
-                font-weight: 600;
+                font-size: 1.1rem;
+                font-weight: 500;
             }
 
-            .footer p span {
-                color: #f5c542;
+            .footer span {
+                color: #ffe082;
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
         </style>
         <title>List - Request For Leave</title>
     </head>
     <body class="d-flex flex-column min-vh-100">
-
-        <%@ include file="../common/navbar.jspf" %>
-
+        <header>
+            <%@ include file="../common/navbar.jspf" %>
+        </header>
         <div class="list-table container flex-fill">
             <h2>List - Request For Leave</h2>
             <table border="1">
@@ -105,8 +168,6 @@
                     <tr>
                         <th>No</th>
                         <th>Employee Name</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
                         <th>Reason</th>
                         <th>Status</th>
                         <th>Processed By</th>
@@ -122,34 +183,42 @@
                             <tr>
                                 <td>${loop.index + 1}</td>
                                 <td>${r.createdBy.fullName}</td>
-                                <td>${r.fromDate}</td>
-                                <td>${r.toDate}</td>
                                 <td>${r.reason}</td>
-                                <td>
-                                    ${r.status eq 0?"Processing":
-                                      r.status eq 1?"Approved":"Rejected"
-                                    }
-                                </td>
-                                <td>${r.processedBy.fullName}</td>
-                                <td>${r.processedTime}</td>
-                                <td>${r.note}</td>
-                                <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a></td>
-                            </tr>
-                        </c:forEach>
-                        <%-- Additional rows would be populated here dynamically --%>
-                    </c:if>
-                </tbody>
-            </table>   
-            <h3 class="message-table"><c:if test="${empty requestScope.requestList}">No request is available</c:if></h3>
-        </div>
+                                <td class="status
+                                    ${r.status eq 0 ? 'processing' :
+                                      r.status eq 1 ? 'approved' :
+                                      'rejected'}">
+                                        ${r.status eq 0 ? "Đang xử lý" :
+                                          r.status eq 1 ? "Đã duyệt" :
+                                          "Từ chối"}
+                                    </td>
+                                    <td>${r.processedBy.fullName}</td>
+                                    <td>${r.processedTime}</td>
+                                    <td>${r.note}</td>
+                                    <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a></td>
+                                </tr>
+                            </c:forEach>
+                            <%-- Additional rows would be populated here dynamically --%>
+                        </c:if>
+                    </tbody>
+                </table>   
 
-        <footer class="footer mt-auto">
-            <div class="container">
-                <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
+                <c:if test="${empty requestScope.requestList}">
+                    <h3 class="message-table">No request is available</h3>
+                </c:if>
+
+                <div class="pagger">
+                    <jsp:include page="../common/pagger.jsp"></jsp:include>
+                </div>
             </div>
-        </footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-    </body>
-</html>
+
+            <footer class="footer mt-auto">
+                <div class="container">
+                    <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
+                </div>
+            </footer>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+        </body>
+    </html>

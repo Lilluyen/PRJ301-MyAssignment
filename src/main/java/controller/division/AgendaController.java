@@ -46,12 +46,26 @@ public class AgendaController extends BaseAuthorizationController {
             offset--;
         }
 
+        int pagesize = 10;
+        String page = req.getParameter("page");
+        page = (page == null) ? "1" : page;
+        int pageindex = Integer.parseInt(page);
+
         Date weekStart = WeekHelper.getWeekStart(offset);
         Date weekEnd = WeekHelper.getWeekEnd(offset);
 
         AgendaDBContext dao = new AgendaDBContext();
-        List<Agenda> agendas = dao.getAgendaByDepartment(weekStart, userID);
-        
+        List<Agenda> agendas = dao.getAgendaByDepartment(weekStart, userID, pageindex, pagesize);
+
+        dao = new AgendaDBContext();
+        int count = dao.count(weekStart.toString(), userID);
+
+        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+
+        req.setAttribute("totalpage", totalpage);
+        req.setAttribute("pageindex", pageindex);
+        req.setAttribute("action", "agenda");
+        req.setAttribute("method", "get");
         req.setAttribute("offset", offset);
         req.setAttribute("weekStart", weekStart);
         req.setAttribute("weekEnd", weekEnd);

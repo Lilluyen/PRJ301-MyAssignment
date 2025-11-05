@@ -136,30 +136,31 @@ input[type="submit"]:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(77, 171, 247, 0.6);
 }
+header, footer{
+    animation: fadeInUp 0.7s ease forwards;
+}
 
 
 /* ===== Footer ===== */
 .footer {
-    background: linear-gradient(135deg, #ffffff, #4ca1af);
-    color: #000000;
+    background: linear-gradient(135deg, #007bff, #00bcd4);
+    color: white;
     text-align: center;
     padding: 25px 10px;
     font-size: 0.95rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 65px;
+    margin-top: auto;
 }
 
 .footer p {
     margin: 0;
-    padding: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
-.footer p span {
-    color: #f5c542;
+.footer span {
+    color: #ffe082;
 }
-
 @media (max-width: 480px) {
     .create-request {
         padding: 25px;

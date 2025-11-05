@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <a class="navbar-brand" href="/company/home">Cambodia Company</a>
@@ -13,21 +14,37 @@
                        href="/company/home">Home</a>
                 </li>
                 <li class="nav-item nav-item-request">
-                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/create.jsp') ? 'active' : ''}"
+                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/create.jsp')
+                                         || pageContext.request.requestURI.contains('/edit.jsp')                  
+                                         ? 'active' : ''}"
                        href="/company/request/create">Create</a>
                 </li>
-                <li class="nav-item nav-item-request">
-                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/list.jsp') 
-                    || pageContext.request.requestURI.contains('/review.jsp')
-                    ? 'active' : ''}"
-                       href="/company/request/list">View</a>
-                </li>
-                <li class="nav-item nav-item-request">
-                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/edit.jsp')
-                                         || pageContext.request.requestURI.endsWith('/list_edit.jsp')
-                                         ? 'active' : ''}"
-                       href="/company/request/modify">Edit</a>
-                </li>
+                <c:set var="view" value="false"/>
+                <c:set var="agenda" value="false"/>
+                <c:forEach var="r" items="${sessionScope.auth.roles}">
+                    <c:forEach var="f" items="${r.features}">
+                        <c:if test="${f.url eq '/request/supervisor-review' and !view}">
+                            <li class="nav-item nav-item-request">
+                                <a class="nav-link ${pageContext.request.requestURI.endsWith('/list.jsp') 
+                                                     || pageContext.request.requestURI.contains('/review.jsp')
+                                                     ? 'active' : ''}"
+                                   href="/company/request/list">View</a>
+                                   <c:set var="view" value="true"/>
+                            </li>
+                        </c:if>
+                            
+                        <c:if test="${f.url eq '/division/agenda' and !agenda}">
+
+                            <li class="nav-item nav-item-request">
+                                <a class="nav-link ${pageContext.request.requestURI.endsWith('/agenda.jsp')
+                                                     ? 'active' : ''}"
+                                   href="/company/division/agenda">Agenda</a>
+                                   <c:set var="agenda" value="true"/>
+                            </li>
+                        </c:if>
+                    </c:forEach>
+                </c:forEach>
+
                 <form action="${pageContext.request.contextPath}/logout" method="post" style="display:inline;" class="nav-item nav-item-logout">
                     <button type="submit" class="nav-link btn btn-link" style="text-decoration:none;">Logout
                     </button>

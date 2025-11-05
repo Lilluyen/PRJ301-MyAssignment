@@ -20,15 +20,31 @@ import model.iam.User;
  * @author tdgg
  */
 @WebServlet(urlPatterns = "/request/list")
-public class ListController extends BaseAuthorizationController{
+public class ListController extends BaseAuthorizationController {
 
-     protected void processRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-         RequestForLeaveDBContext db = new RequestForLeaveDBContext();
-         ArrayList<RequestForLeave> listRequestForLeaves = db.getByEmployeeAndSubodiaries(user.getId());
-         req.setAttribute("requestList", listRequestForLeaves);
-         req.getRequestDispatcher("/views/request/list.jsp").forward(req, resp);
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+
+        int pagesize = 5;
+        String page = req.getParameter("page");
+        page = (page == null) ? "1" : page;
+        int pageindex = Integer.parseInt(page);
+
+        RequestForLeaveDBContext db = new RequestForLeaveDBContext();
+        ArrayList<RequestForLeave> listRequestForLeaves = db.getByEmployeeAndSubodiaries(user.getId(), pageindex, pagesize);
+
+        db = new RequestForLeaveDBContext();
+        int count = db.countEmployeeAndSubonaires(user.getId());
+
+        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+
+        req.setAttribute("totalpage", totalpage);
+        req.setAttribute("pageindex", pageindex);
+        req.setAttribute("action", "list");
+        req.setAttribute("method", "get");
+        req.setAttribute("requestList", listRequestForLeaves);
+        req.getRequestDispatcher("/views/request/list.jsp").forward(req, resp);
     }
-    
+
     @Override
     protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         processRequest(req, resp, user);
@@ -38,5 +54,5 @@ public class ListController extends BaseAuthorizationController{
     protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         processRequest(req, resp, user);
     }
-    
+
 }

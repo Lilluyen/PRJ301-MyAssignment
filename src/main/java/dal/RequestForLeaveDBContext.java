@@ -21,8 +21,81 @@ import model.iam.Role;
  * @author tdgg
  */
 public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
+    public int countOwn(int id){
+        try {
+            String sql = """
+                                     WITH Select_Request_For_leave AS (
+                                         SELECT
+                                             r.[requestID],
+                                             r.[createdBy],
+                                             e.fullName,
+                                             r.[roleID],
+                                             r.[createdTime],
+                                             r.[fromDate],
+                                             r.[toDate],
+                                             r.[reason],
+                                             r.[status],
+                                             r.[processedBy],
+                                             r.[processedTime],
+                                             r.[processNote]
+                                         FROM [RequestForLeave] r
+                                         JOIN Employee e ON e.employeeID = r.createdBy
+                                         WHERE r.[createdBy] = ?
+                                     )
+                                     SELECT COUNT(*) AS totalRecords
+                                     FROM Select_Request_For_leave;""";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                return rs.getInt("totalRecords");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            closeConnection();
+        }
+        return -1;
+    }
+    
+    public int countEmployeeAndSubonaires(int id){
+        try {
+            String sql = """
+                                     DECLARE @employeeID INT = ?;
+                                                      WITH Subordinates AS (
+                                         SELECT e.employeeID,
+                                                e.fullName,
+                                                e.supervisorID,
+                                                0 AS [level]
+                                         FROM Employee e
+                                         WHERE e.employeeID = @employeeID
+                                                          UNION ALL
+                                                          SELECT e.employeeID,
+                                                e.fullName,
+                                                e.supervisorID,
+                                                s.[level] + 1
+                                         FROM Employee e
+                                         JOIN Subordinates s ON e.supervisorID = s.employeeID
+                                     )
+                                     SELECT COUNT(*) AS totalRecords
+                                     FROM Subordinates s
+                                     JOIN RequestForLeave r ON s.employeeID = r.createdBy;""";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                return rs.getInt("totalRecords");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            closeConnection();
+        }
+        return -1;
+    }
 
-    public ArrayList<RequestForLeave> getByEmployee(int id) {
+    public ArrayList<RequestForLeave> getByEmployee(int id, int pageIndex, int pageSize) {
         ArrayList<RequestForLeave> requestForLeaves = new ArrayList<>();
         try {
             String sql = """
@@ -56,10 +129,16 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                        ,srfl.processNote
                                        FROM Select_Request_For_leave srfl LEFT JOIN Employee e
                                        ON e.employeeID = srfl.processedBy
+                                       ORDER BY srfl.createdTime DESC
+                                       OFFSET (? - 1) * ? ROWS
+                                       FETCH NEXT ? ROWS ONLY;
                                                       """;
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
+            stm.setInt(2, pageIndex);
+            stm.setInt(3, pageSize);
+            stm.setInt(4, pageSize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 RequestForLeave requestForLeave = new RequestForLeave();
@@ -96,40 +175,51 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
 
     }
 
-    public ArrayList<RequestForLeave> getByEmployeeAndSubodiaries(int id) {
+    public ArrayList<RequestForLeave> getByEmployeeAndSubodiaries(int id, int pageIndex, int pageSize) {
         ArrayList<RequestForLeave> requestForLeaves = new ArrayList<>();
         try {
             String sql = """
-                                     With Subordinates as (
-                                     Select e.employeeID
-                                     ,e.fullName
-                                     ,e.supervisorID
-                                     ,0 as [level]
-                                     From Employee e
-                                     Where e.employeeID = ?
-                                                      Union All
-                                    Select e.employeeID
-                                     ,e.fullName
-                                     ,e.supervisorID
-                                     ,s.[level] + 1
-                                     From Employee e Join Subordinates s On e.supervisorID = s.employeeID
-                                     )
-                                     SELECT r.requestID
-                                     ,r.createdBy
-                                     ,s.fullName as createdName
-                                     ,r.createdTime
-                                     ,r.fromDate
-                                     ,r.toDate
-                                     ,r.reason
-                                     ,r.[status]
-                                     ,r.processedTime
-                                     ,r.processedBy
-                                     ,e.fullName as processName
-                                     ,r.processNote
-                                                      FROM Subordinates s Join RequestForLeave r ON s.employeeID = r.createdBy
-                                     Left Join Employee e On e.employeeID = r.processedBy""";
+                                     WITH Subordinates AS (
+                                                           SELECT e.employeeID,
+                                                                  e.fullName,
+                                                                  e.supervisorID,
+                                                                  0 AS [level]
+                                                           FROM Employee e
+                                                           WHERE e.employeeID = ?
+                                                       
+                                                           UNION ALL
+                                                       
+                                                           SELECT e.employeeID,
+                                                                  e.fullName,
+                                                                  e.supervisorID,
+                                                                  s.[level] + 1
+                                                           FROM Employee e
+                                                           JOIN Subordinates s ON e.supervisorID = s.employeeID
+                                                       )
+                                                       SELECT 
+                                                           r.requestID,
+                                                           r.createdBy,
+                                                           s.fullName AS createdName,
+                                                           r.createdTime,
+                                                           r.fromDate,
+                                                           r.toDate,
+                                                           r.reason,
+                                                           r.[status],
+                                                           r.processedTime,
+                                                           r.processedBy,
+                                                           e.fullName AS processName,
+                                                           r.processNote
+                                                       FROM Subordinates s
+                                                       JOIN RequestForLeave r ON s.employeeID = r.createdBy
+                                                       LEFT JOIN Employee e ON e.employeeID = r.processedBy
+                                                       ORDER BY r.createdTime DESC
+                                                       OFFSET (? - 1) * ? ROWS
+                                                       FETCH NEXT ? ROWS ONLY;""";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
+            stm.setInt(2, pageIndex);
+            stm.setInt(3, pageSize);
+            stm.setInt(4, pageSize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 RequestForLeave requestForLeave = new RequestForLeave();

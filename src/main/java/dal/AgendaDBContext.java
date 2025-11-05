@@ -18,10 +18,12 @@ import model.Employee;
  */
 public class AgendaDBContext extends DBContext<Agenda>{
 
-    public List<Agenda> getAgendaByDepartment(Date weekStart, int userID){
+    public List<Agenda> getAgendaByDepartment(Date weekStart, int userID, int pageindex, int pagesize){
         List<Agenda> list = new ArrayList<>();
         try {
             String sql = """
+                                    EXEC sp_UpdateWeeklyAgenda;
+                            
                                      SELECT wa.*, e.fullName
                                              FROM WeeklyAgenda wa
                                              JOIN Employee e ON e.employeeID = wa.employeeID
@@ -33,10 +35,16 @@ public class AgendaDBContext extends DBContext<Agenda>{
                                                        SELECT employeeID FROM Erollment WHERE userID = ?
                                                    )
                                                )
-                                             ORDER BY e.fullName;""";
+                                             ORDER BY e.fullName
+                                             OFFSET (? - 1) * ? ROWS
+                                             FETCH NEXT ? ROWS ONLY
+                         ;""";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setDate(1, weekStart);
             stm.setInt(2, userID);
+            stm.setInt(3, pageindex);
+            stm.setInt(4, pagesize);
+            stm.setInt(5, pagesize);
             ResultSet rs = stm.executeQuery();
         while (rs.next()) {
             Agenda a = new Agenda();
@@ -64,6 +72,33 @@ public class AgendaDBContext extends DBContext<Agenda>{
         return list;
     }
     
+    public int count(String weekStart, int userID){
+        try {
+            String sql = """
+                                     SELECT COUNT(*) AS totalRecords
+                                     FROM WeeklyAgenda wa
+                                     JOIN Employee e ON e.employeeID = wa.employeeID
+                                     WHERE wa.weekStart = ?
+                                     AND e.departmentID = (
+                                         SELECT departmentID
+                                         FROM Employee
+                                         WHERE employeeID = (
+                                             SELECT employeeID FROM Erollment WHERE userID = ?
+                                         )
+                                     );""";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, weekStart);
+            stm.setInt(2, userID);
+            
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                return rs.getInt("totalRecords");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AgendaDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
     
     @Override
     public ArrayList<Agenda> list() {

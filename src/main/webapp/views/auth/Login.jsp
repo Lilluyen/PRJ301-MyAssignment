@@ -17,12 +17,12 @@
             <form action="login" method="post" class="login-form">
                 <input type="text" id="username" name="username" 
                        value="${cookie.remCookie != null && cookie.remCookie.value == 'yes' ? cookie.usernameCookie.value : ''}" placeholder="Username"
-                       required autocomplete="off">
+                       required >
                 
                 <br>
                 <input type="password" id="password" name="password" 
                        value="${cookie.remCookie != null && cookie.remCookie.value == 'yes' ? cookie.passwordCookie.value : ''}" placeholder="Password"
-                       required autocomplete="off">
+                       required >
 
                 <label>
                     <input type="checkbox" id="remember" name="remember" value="yes"

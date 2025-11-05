@@ -17,13 +17,28 @@
         <link href="/company/css/review.css" rel="stylesheet" type="text/css"/>
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
         <title>Review - Request For Leave</title>
+        <style>
+            header, footer{
+                animation: fadeInUp 0.7s ease forwards;
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
 
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
 
     </head>
     <body class="d-flex flex-column min-vh-100">
-
-        <%@ include file="../common/navbar.jspf" %>
-
+        <header>
+            <%@ include file="../common/navbar.jspf" %>
+        </header>
         <div class="create-request container flex-fill">
 
             <h2>Review Leave Request Form</h2>
@@ -88,20 +103,22 @@
                         The Human Resources Department will keep the leave record based on the duly approved leave request form.
                     </p>
                     <img src="/company/img/nghiphep.svg" alt="Review Leave Image" class="img-fluid"/>
-                    <div class="form-submit" style="${requestScope.display}">
-                        <form action="supervisor-review" method="post">
-                            <div class="form-group">
-                                <label for="note">Note:</label>
-                                <textarea id="note" name="note"></textarea>
-                            </div>
-                            <div class="submit-button">
-                                <input type="hidden" name="id" value="${requestScope.info.id}"/>
-                                <input type="submit" value="Approve" name="action">
-                                <input type="submit" value="Reject" name="action">
-                            </div>
-                        </form>
+                    <c:if test="${requestScope.display != 'none'}">
+                        <div class="form-submit">
+                            <form action="supervisor-review" method="post">
+                                <div class="form-group">
+                                    <label for="note">Note:</label>
+                                    <textarea id="note" name="note"></textarea>
+                                </div>
+                                <div class="submit-button">
+                                    <input type="hidden" name="id" value="${requestScope.info.id}"/>
+                                    <input type="submit" value="Approve" name="action">
+                                    <input type="submit" value="Reject" name="action">
+                                </div>
+                            </form>
 
-                    </div>
+                        </div>
+                    </c:if>
                 </section>
             </div>
         </div>

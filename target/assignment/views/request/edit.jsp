@@ -30,7 +30,9 @@
     </head>
     <body>
 
-        <%@ include file="../common/navbar.jspf" %>
+        <header>
+            <%@ include file="../common/navbar.jspf" %>
+        </header>
 
         <div class="create-request container">
             <h2>Leave Request Form</h2>

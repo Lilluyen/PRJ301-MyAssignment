@@ -34,7 +34,7 @@ public class RemoveController extends BaseAuthorizationController {
         int requestId = Integer.parseInt(req.getParameter("id"));
         RequestForLeaveDBContext db = new RequestForLeaveDBContext();
         db.delete(requestId);
-        resp.sendRedirect(req.getContextPath() + "/request/modify");
+        resp.sendRedirect(req.getContextPath() + "/request/create");
     }
 
 }

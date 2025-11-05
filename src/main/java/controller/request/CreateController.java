@@ -43,7 +43,7 @@ public class CreateController extends BaseAuthorizationController {
         
         RequestForLeaveDBContext db = new RequestForLeaveDBContext();
         db.insert(requestForLeave);
-        resp.sendRedirect(req.getContextPath() + "/request/list");
+        resp.sendRedirect(req.getContextPath() + "/request/create");
     }
     
     @Override
@@ -52,6 +52,27 @@ public class CreateController extends BaseAuthorizationController {
         RoleDBContext roleDB = new RoleDBContext();
         ArrayList<Division> listDivisions = divisionDB.list();
         ArrayList<Role> listRoles = roleDB.getRolesByUserIDNotDuplicate(user.getId());
+        
+        int userId = user.getId();
+        
+        int pagesize = 5;
+        String page = req.getParameter("page");
+        page = (page == null) ? "1" : page;
+        int pageindex = Integer.parseInt(page);
+
+        RequestForLeaveDBContext leaveDB = new RequestForLeaveDBContext();
+        ArrayList<RequestForLeave> leavesRequestList = leaveDB.getByEmployee(userId, pageindex, pagesize);
+        
+        leaveDB = new RequestForLeaveDBContext();
+        int count = leaveDB.countOwn(user.getId());
+
+        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+
+        req.setAttribute("totalpage", totalpage);
+        req.setAttribute("pageindex", pageindex);
+        req.setAttribute("action", "create");
+        req.setAttribute("method", "get");
+        req.setAttribute("requestList", leavesRequestList);
         req.setAttribute("divisions", listDivisions);
         req.setAttribute("roles", listRoles);
         req.getRequestDispatcher("/views/request/create.jsp").forward(req, resp);

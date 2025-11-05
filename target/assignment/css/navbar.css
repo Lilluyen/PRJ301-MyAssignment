@@ -1,5 +1,6 @@
+
 .navbar {
-    background: linear-gradient(135deg, #4ca1af, #b8dee4) !important;
+    background: linear-gradient(135deg, #007bff, #00bcd4) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
     padding: 20px 0;
 }
@@ -17,18 +18,18 @@
 }
 
 .navbar-nav .nav-link {
-    color: #050504 !important;
+    color: white !important;
     font-weight: 500;
     display: block;
     width: 100%;
-    padding: 8px 20px !important;
+    padding: 10px 20px !important;
     /* background-color: #ffd65c; */
     border-radius: 25px;
     transition: all 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-    background-color: #f5ebcd;
+    background-color: orange;
     transform: translateY(-2px);
 }
 
@@ -56,6 +57,19 @@
     background-color: #000 !important;
     color: #fff !important;
     transform: translateY(-2px);
+}
+
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 992px) {

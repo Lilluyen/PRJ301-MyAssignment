@@ -16,31 +16,46 @@
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
         <title>Home - Cambodia Company</title>
         <style>
+            *{
+                animation: fadeInUp 0.7s ease forwards;
+            }
 
             /* ===== Footer ===== */
             .footer {
-                background: linear-gradient(135deg, #ffffff, #4ca1af);
-                color: #000000;
+                background: linear-gradient(135deg, #007bff, #00bcd4);
+                color: white;
                 text-align: center;
                 padding: 25px 10px;
                 font-size: 0.95rem;
                 border-top: 1px solid rgba(255, 255, 255, 0.08);
-                margin-top: 65px;
+                margin-top: auto;
             }
 
             .footer p {
                 margin: 0;
-                padding: 0;
-                font-size: 1.2rem;
-                font-weight: 600;
+                font-size: 1.1rem;
+                font-weight: 500;
             }
 
-            .footer p span {
-                color: #f5c542;
+            .footer span {
+                color: #ffe082;
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
-            
         </style>
+
+
+
     </head>
     <body class="d-flex flex-column min-vh-100">
         <%@ include file="../common/navbar.jspf" %>
@@ -61,8 +76,13 @@
                 <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
             </div>
         </footer>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+        <c:if test="${sessionScope.message eq 'denied'}">
+            <script>alert('Access denied!');</script>
+            <c:remove var="message" scope="session" />
+        </c:if>
     </body>
 </html>

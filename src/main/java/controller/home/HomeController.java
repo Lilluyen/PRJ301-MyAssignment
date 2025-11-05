@@ -4,7 +4,7 @@
  */
 package controller.home;
 
-import controller.iam.BaseAuthenticationController;
+import controller.iam.BaseAuthorizationController;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,16 +17,18 @@ import model.iam.User;
  * @author tdgg
  */
 @WebServlet(urlPatterns = "/home")
-public class HomeController extends BaseAuthenticationController {
+public class HomeController extends BaseAuthorizationController {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException {
-        
+    protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException {
-        request.getRequestDispatcher("/views/home/home.jsp").forward(request, response);
+    protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+        req.getRequestDispatcher("/views/home/home.jsp").forward(req, resp);
     }
+
+   
 
 }

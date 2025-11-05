@@ -42,7 +42,7 @@ public class EmployeeReviewController extends BaseAuthorizationController{
         ArrayList<Role> listRoles = roleDB.getRolesByUserIDNotDuplicate(requestInfo.getCreatedBy().getId());
         
         
-        req.setAttribute("display", "display: none;");
+        req.setAttribute("display", "none");
         req.setAttribute("displayMess", "display: block !important;");
         req.setAttribute("divisions", listDivisions);
         req.setAttribute("roles", listRoles);
