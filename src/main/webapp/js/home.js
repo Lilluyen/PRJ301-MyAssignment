@@ -1,32 +1,51 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
- */
+const track = document.querySelector('.slider-track');
+const items = document.querySelectorAll('.slider-item');
+const prevBtn = document.querySelector('.slider-btn.prev');
+const nextBtn = document.querySelector('.slider-btn.next');
 
-
-const track = document.querySelector(".slider-track");
-const slides = document.querySelectorAll(".banner");
-const prevBtn = document.querySelector(".slider-btn.prev");
-const nextBtn = document.querySelector(".slider-btn.next");
-
-let index = 0;
+let currentIndex = 0;
+let visibleCount = Math.floor(document.querySelector('.slider-wrapper').offsetWidth / items[0].offsetWidth);
 
 function updateSlider() {
-    track.style.transform = `translateX(-${index * 100}%)`;
+    if (!items[0]) return; // tránh lỗi khi slider rỗng
+    const style = getComputedStyle(items[0]);
+    const marginRight = parseFloat(style.marginRight) || 0;
+    const width = items[0].offsetWidth + marginRight;
+    track.style.transform = `translateX(-${currentIndex * width}px)`;
 }
 
-prevBtn.addEventListener("click", () => {
-    index = (index > 0) ? index - 1 : slides.length - 1;
+// Nút next
+nextBtn.addEventListener('click', () => {
+    if (currentIndex < items.length - visibleCount) {
+        currentIndex++;
+    } else {
+        currentIndex = 0; // quay về đầu
+    }
     updateSlider();
 });
 
-nextBtn.addEventListener("click", () => {
-    index = (index < slides.length - 1) ? index + 1 : 0;
+// Nút prev
+prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+    } else {
+        currentIndex = items.length - visibleCount; // quay về cuối
+    }
     updateSlider();
 });
 
-// Auto slide every 5s
+// Resize window
+window.addEventListener('resize', () => {
+    visibleCount = Math.floor(document.querySelector('.slider-wrapper').offsetWidth / items[0].offsetWidth);
+    updateSlider();
+});
+
+// Auto slide mỗi 3 giây
 setInterval(() => {
-    index = (index + 1) % slides.length;
+    if (currentIndex < items.length - visibleCount) {
+        currentIndex++;
+    } else {
+        currentIndex = 0;
+    }
     updateSlider();
-}, 5000);
+}, 3000);

@@ -19,27 +19,26 @@
                                          ? 'active' : ''}"
                        href="/company/request/create">Create</a>
                 </li>
-                <c:set var="view" value="false"/>
+
+                <li class="nav-item nav-item-request">
+                    <a class="nav-link ${pageContext.request.requestURI.endsWith('/list.jsp') 
+                                         || pageContext.request.requestURI.contains('/review.jsp')
+                                         ? 'active' : ''}"
+                       href="/company/request/list">View</a>
+
+                </li>
+
                 <c:set var="agenda" value="false"/>
                 <c:forEach var="r" items="${sessionScope.auth.roles}">
                     <c:forEach var="f" items="${r.features}">
-                        <c:if test="${f.url eq '/request/supervisor-review' and !view}">
-                            <li class="nav-item nav-item-request">
-                                <a class="nav-link ${pageContext.request.requestURI.endsWith('/list.jsp') 
-                                                     || pageContext.request.requestURI.contains('/review.jsp')
-                                                     ? 'active' : ''}"
-                                   href="/company/request/list">View</a>
-                                   <c:set var="view" value="true"/>
-                            </li>
-                        </c:if>
-                            
+
                         <c:if test="${f.url eq '/division/agenda' and !agenda}">
 
                             <li class="nav-item nav-item-request">
                                 <a class="nav-link ${pageContext.request.requestURI.endsWith('/agenda.jsp')
                                                      ? 'active' : ''}"
                                    href="/company/division/agenda">Agenda</a>
-                                   <c:set var="agenda" value="true"/>
+                                <c:set var="agenda" value="true"/>
                             </li>
                         </c:if>
                     </c:forEach>
