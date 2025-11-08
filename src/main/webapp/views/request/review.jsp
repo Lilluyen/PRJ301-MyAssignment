@@ -40,87 +40,91 @@
             <%@ include file="../common/navbar.jspf" %>
         </header>
         <div class="create-request container flex-fill">
+            <c:if test="${requestScope.info != null}">
+                <h2 class="create-request-title">Review Leave Request Form</h2>
+                <div class="row">
+                    <form class="col-md-6 form-container">
 
-            <h2>Review Leave Request Form</h2>
-            <div class="row">
-                <form class="col-md-6 form-container">
-
-                    <input type="hidden" name="requestforleaveId" id="requestforleaveId" value="${requestScope.info.id}"/>
-                    <div class="form-group">
-                        <label for="employeeName">Employee Name:</label>
-                        <input type="text" id="employeeName" name="employeeName" 
-                               value="${requestScope.info.createdBy.fullName}" required disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role:</label>
-                        <input type="text" name="role" id="role" disabled
-                               <c:forEach var="r"  items="${requestScope.roles}">
-
-                                   <c:if test="${requestScope.info.role.id == r.id}">
-
-                                   </c:if>
-                                   value="${r.roleName}">
-
-                        </c:forEach>
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="department">Department:</label>
-                        <input type="text" name="department" id="department" disabled
-                               <c:forEach var="d" items="${requestScope.divisions}">
-
-                                   <c:if test="${requestScope.createdBy.division.id == d.id}">
-                                       selected
-                                   </c:if>
-                                   value="${d.departmentName}">
-
-                        </c:forEach>
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fromDate">From Date:</label>
-                        <input type="date" id="fromDate" name="fromDate" 
-                               value="${requestScope.info.fromDate}"
-                               required disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="toDate">To Date:</label>
-                        <input type="date" id="toDate" name="toDate"
-                               value="${requestScope.info.toDate}"
-                               required disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">Reason:</label>
-                        <textarea id="reason" name="reason"required disabled>${requestScope.info.reason}</textarea>
-                    </div>
-
-
-                </form>
-                <section class="response-message col-md-6">
-                    <p style="${requestScope.displayMess}"><strong>Note:</strong> Before taking leave, employees must complete the handover of their work and obtain the signature confirmation from the person receiving the handover.
-                        The Human Resources Department will keep the leave record based on the duly approved leave request form.
-                    </p>
-                    <img src="/company/img/nghiphep.svg" alt="Review Leave Image" class="img-fluid"/>
-                    <c:if test="${requestScope.display != 'none'}">
-                        <div class="form-submit">
-                            <form action="supervisor-review" method="post">
-                                <div class="form-group">
-                                    <label for="note">Note:</label>
-                                    <textarea id="note" name="note"></textarea>
-                                </div>
-                                <div class="submit-button">
-                                    <input type="hidden" name="id" value="${requestScope.info.id}"/>
-                                    <input type="submit" value="Approve" name="action">
-                                    <input type="submit" value="Reject" name="action">
-                                </div>
-                            </form>
-
+                        <input type="hidden" name="requestforleaveId" id="requestforleaveId" value="${requestScope.info.id}"/>
+                        <div class="form-group">
+                            <label for="employeeName">Employee Name:</label>
+                            <input type="text" id="employeeName" name="employeeName" 
+                                   value="${requestScope.info.createdBy.fullName}" required disabled>
                         </div>
-                    </c:if>
-                </section>
-            </div>
+                        <div class="form-group">
+                            <label for="role">Role:</label>
+                            <input type="text" name="role" id="role" disabled
+                                   <c:forEach var="r"  items="${requestScope.roles}">
+
+                                       <c:if test="${requestScope.info.role.id == r.id}">
+
+                                       </c:if>
+                                       value="${r.roleName}">
+
+                            </c:forEach>
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Department:</label>
+                            <input type="text" name="department" id="department" disabled
+                                   <c:forEach var="d" items="${requestScope.divisions}">
+
+                                       <c:if test="${requestScope.createdBy.division.id == d.id}">
+                                           selected
+                                       </c:if>
+                                       value="${d.departmentName}">
+
+                            </c:forEach>
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fromDate">From Date:</label>
+                            <input type="date" id="fromDate" name="fromDate" 
+                                   value="${requestScope.info.fromDate}"
+                                   required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="toDate">To Date:</label>
+                            <input type="date" id="toDate" name="toDate"
+                                   value="${requestScope.info.toDate}"
+                                   required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="reason">Reason:</label>
+                            <textarea id="reason" name="reason"required disabled>${requestScope.info.reason}</textarea>
+                        </div>
+
+
+                    </form>
+                    <section class="response-message col-md-6">
+                        <p style="${requestScope.displayMess}"><strong>Note:</strong> Before taking leave, employees must complete the handover of their work and obtain the signature confirmation from the person receiving the handover.
+                            The Human Resources Department will keep the leave record based on the duly approved leave request form.
+                        </p>
+                        <img src="/company/img/nghiphep.svg" alt="Review Leave Image" class="img-fluid"/>
+                        <c:if test="${requestScope.display != 'none'}">
+                            <div class="form-submit">
+                                <form action="supervisor-review" method="post">
+                                    <div class="form-group">
+                                        <label for="note">Note:</label>
+                                        <textarea id="note" name="note"></textarea>
+                                    </div>
+                                    <div class="submit-button">
+                                        <input type="hidden" name="id" value="${requestScope.info.id}"/>
+                                        <input type="submit" value="Approve" name="action">
+                                        <input type="submit" value="Reject" name="action">
+                                    </div>
+                                </form>
+
+                            </div>
+                        </c:if>
+                    </section>
+                </div>
+            </c:if>
+            <c:if test="${requestScope.info == null}">
+                <h2 class="error-message">No Request Is Available</h2>
+            </c:if>
         </div>
 
         <footer class="footer mt-auto">

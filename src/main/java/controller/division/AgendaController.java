@@ -46,7 +46,7 @@ public class AgendaController extends BaseAuthorizationController {
             offset--;
         }
 
-        int pagesize = 10;
+        int pagesize = 5;
         String page = req.getParameter("page");
         page = (page == null) ? "1" : page;
         int pageindex = Integer.parseInt(page);

@@ -4,6 +4,7 @@
  */
 package dal;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +22,8 @@ import model.iam.Role;
  * @author tdgg
  */
 public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
-    public int countOwn(int id){
+
+    public int countOwn(int id, Date fromDate, Date toDate, Integer status) {
         try {
             String sql = """
                                      WITH Select_Request_For_leave AS (
@@ -43,22 +45,42 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                          WHERE r.[createdBy] = ?
                                      )
                                      SELECT COUNT(*) AS totalRecords
-                                     FROM Select_Request_For_leave;""";
+                                     FROM Select_Request_For_leave s
+                                     WHERE 1 = 1""";
+
+            ArrayList<Object> params = new ArrayList<>();
+            if (fromDate != null) {
+                sql += " AND s.fromDate >= ?";
+                params.add(fromDate);
+            }
+            if (toDate != null) {
+                sql += "  AND s.toDate <= ?";
+                params.add(toDate);
+            }
+            if (status != null) {
+                sql += " AND s.[status] = ?";
+                params.add(status);
+            }
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
+
+            for (int index = 0; index < params.size(); index++) {
+                stm.setObject(index + 2, params.get(index));
+            }
+
             ResultSet rs = stm.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt("totalRecords");
             }
         } catch (SQLException ex) {
             Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             closeConnection();
         }
         return -1;
     }
-    
-    public int countEmployeeAndSubonaires(int id){
+
+    public int countEmployeeAndSubonaires(int id, String name, Date fromDate, Date toDate, Integer status) {
         try {
             String sql = """
                                      DECLARE @employeeID INT = ?;
@@ -70,7 +92,7 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                          FROM Employee e
                                          WHERE e.employeeID = @employeeID
                                                           UNION ALL
-                                                          SELECT e.employeeID,
+                                                SELECT e.employeeID,
                                                 e.fullName,
                                                 e.supervisorID,
                                                 s.[level] + 1
@@ -79,23 +101,47 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                      )
                                      SELECT COUNT(*) AS totalRecords
                                      FROM Subordinates s
-                                     JOIN RequestForLeave r ON s.employeeID = r.createdBy;""";
+                                     JOIN RequestForLeave r ON s.employeeID = r.createdBy
+                                     WHERE 1 = 1""";
+
+            ArrayList<Object> params = new ArrayList<>();
+            if (name != null && name.trim().length() > 0) {
+                sql += " AND s.fullName LIKE ?";
+                name = "%" + name + "%";
+                params.add(name);
+            }
+            if (fromDate != null) {
+                sql += " AND r.fromDate >= ?";
+                params.add(fromDate);
+            }
+            if (toDate != null) {
+                sql += "  AND r.toDate <= ?";
+                params.add(toDate);
+            }
+            if (status != null) {
+                sql += " AND r.[status] = ?";
+                params.add(status);
+            }
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
+            for (int index = 0; index < params.size(); index++) {
+                stm.setObject(index + 2, params.get(index));
+            }
+
             ResultSet rs = stm.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt("totalRecords");
             }
         } catch (SQLException ex) {
             Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
+        } finally {
             closeConnection();
         }
         return -1;
     }
 
-    public ArrayList<RequestForLeave> getByEmployee(int id, int pageIndex, int pageSize) {
+    public ArrayList<RequestForLeave> getByEmployee(int id, int pageIndex, int pageSize, Date fromDate, Date toDate, Integer status) {
         ArrayList<RequestForLeave> requestForLeaves = new ArrayList<>();
         try {
             String sql = """
@@ -129,16 +175,37 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                        ,srfl.processNote
                                        FROM Select_Request_For_leave srfl LEFT JOIN Employee e
                                        ON e.employeeID = srfl.processedBy
-                                       ORDER BY srfl.createdTime DESC
-                                       OFFSET (? - 1) * ? ROWS
-                                       FETCH NEXT ? ROWS ONLY;
-                                                      """;
+                                       WHERE 1 = 1 """;
+            ArrayList<Object> params = new ArrayList<>();
+            if (fromDate != null) {
+                sql += " AND srfl.fromDate >= ?";
+                params.add(fromDate);
+            }
+            if (toDate != null) {
+                sql += "  AND srfl.toDate <= ?";
+                params.add(toDate);
+            }
+            if (status != null) {
+                sql += " AND srfl.[status] = ?";
+                params.add(status);
+            }
+
+            sql += """
+                   ORDER BY srfl.createdTime DESC
+                   OFFSET (? - 1) * ? ROWS
+                   FETCH NEXT ? ROWS ONLY;""";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
-            stm.setInt(2, pageIndex);
-            stm.setInt(3, pageSize);
-            stm.setInt(4, pageSize);
+
+            int index;
+            for (index = 0; index < params.size(); index++) {
+                stm.setObject(index + 2, params.get(index));
+            }
+
+            stm.setInt(index + 2, pageIndex);
+            stm.setInt(index + 3, pageSize);
+            stm.setInt(index + 4, pageSize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 RequestForLeave requestForLeave = new RequestForLeave();
@@ -175,7 +242,8 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
 
     }
 
-    public ArrayList<RequestForLeave> getByEmployeeAndSubodiaries(int id, int pageIndex, int pageSize) {
+    public ArrayList<RequestForLeave> getByEmployeeAndSubodiaries(int id, int pageIndex, int pageSize, String name,
+            Date fromDate, Date toDate, Integer status) {
         ArrayList<RequestForLeave> requestForLeaves = new ArrayList<>();
         try {
             String sql = """
@@ -212,14 +280,44 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                                        FROM Subordinates s
                                                        JOIN RequestForLeave r ON s.employeeID = r.createdBy
                                                        LEFT JOIN Employee e ON e.employeeID = r.processedBy
-                                                       ORDER BY r.createdTime DESC
-                                                       OFFSET (? - 1) * ? ROWS
-                                                       FETCH NEXT ? ROWS ONLY;""";
+                                                       WHERE 1 = 1 """;
+
+            ArrayList<Object> params = new ArrayList<>();
+            if (name != null && name.trim().length() > 0) {
+                sql += " AND s.fullName LIKE ?";
+                name = "%" + name + "%";
+                params.add(name);
+            }
+            if (fromDate != null) {
+                sql += " AND r.fromDate >= ?";
+                params.add(fromDate);
+            }
+            if (toDate != null) {
+                sql += "  AND r.toDate <= ?";
+                params.add(toDate);
+            }
+            if (status != null) {
+                sql += " AND r.[status] = ?";
+                params.add(status);
+            }
+
+            sql += """
+                    ORDER BY r.createdTime DESC
+                    OFFSET (? - 1) * ? ROWS
+                    FETCH NEXT ? ROWS ONLY;""";
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
-            stm.setInt(2, pageIndex);
-            stm.setInt(3, pageSize);
-            stm.setInt(4, pageSize);
+
+            int index;
+            for (index = 0; index < params.size(); index++) {
+                stm.setObject(index + 2, params.get(index));
+            }
+
+            stm.setInt(index + 2, pageIndex);
+            stm.setInt(index + 3, pageSize);
+            stm.setInt(index + 4, pageSize);
+
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 RequestForLeave requestForLeave = new RequestForLeave();
@@ -370,9 +468,9 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
                                            ,[processedTime] = NULL
                                            ,[processNote] = NULL
                                       WHERE [requestID] = ?""";
-            
+
             PreparedStatement stm = connection.prepareCall(sql);
-            
+
             stm.setInt(1, model.getRole().getId());
             model.setCreatedTime(new java.util.Date());
             stm.setTimestamp(2, new java.sql.Timestamp(model.getCreatedTime().getTime()));
@@ -380,14 +478,14 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
             stm.setDate(4, model.getToDate());
             stm.setNString(5, model.getReason());
             stm.setInt(6, model.getId());
-            
+
             stm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             closeConnection();
         }
-        
+
     }
 
     public void updateReview(RequestForLeave model) {
@@ -420,14 +518,14 @@ public class RequestForLeaveDBContext extends DBContext<RequestForLeave> {
             String sql = """
                                      DELETE FROM [RequestForLeave]
                                            WHERE [requestID] = ?""";
-            
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
             stm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(RequestForLeaveDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
 }

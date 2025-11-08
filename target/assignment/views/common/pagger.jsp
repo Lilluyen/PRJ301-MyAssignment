@@ -21,6 +21,11 @@
                 justify-content: center;
                 align-items: center;
                 margin-top: 25px;
+                
+                position: absolute;
+                bottom: 15px;
+                left: 50%;
+                transform: translateX(-50%);
             }
 
             .pagination-form {
@@ -39,6 +44,8 @@
                 border-radius: 8px;
                 overflow: hidden;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+                
             }
 
             .page-item {

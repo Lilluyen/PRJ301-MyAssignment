@@ -20,7 +20,7 @@
               rel="stylesheet" 
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
               crossorigin="anonymous">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <!-- Custom Styles -->
         <link href="/company/css/background.css" rel="stylesheet" type="text/css"/>
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
@@ -101,6 +101,9 @@
                 <!-- ===== DANH SÁCH YÊU CẦU NGHỈ PHÉP ===== -->
                 <div class="list-table">
                     <h2>List - Request For Leave</h2>
+                    <button class="btn-filter" onclick="openFilter()">
+                        <i class="fa-solid fa-filter"></i> Filter
+                    </button>
                     <table>
                         <thead>
                             <tr>
@@ -173,6 +176,48 @@
                                         <button type="submit" name="page" value="${requestScope.pageindex + 1}" class="page-link" ${requestScope.pageindex >= requestScope.totalpage ? 'disabled' : ''}>&raquo;</button>
                                     </li>
                                 </ul>
+
+                                <div class="form-filter">
+                                    <div class="filter-header">
+                                        <h4>Filter Request</h4>
+                                        <button type="button" class="btn-cancel-form" onclick="closeFilter()">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="filter-body">
+                                        
+
+                                        <div class="form-group">
+                                            <label for="fromDate">From Date:</label>
+                                            <input type="date" name="fromDate" id="fromDate" value="${requestScope.fromDateFilter != null ? requestScope.fromDateFilter : ""}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="toDate">To Date:</label>
+                                            <input type="date" name="toDate" id="toDate" value="${requestScope.toDateFilter != null ? requestScope.toDateFilter : ""}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="status">Status:</label>
+                                            <select name="status" id="status">
+                                                <option value="3" selected>Tất cả</option>
+                                                <option value="0" <c:if test="${requestScope.statusFilter == 0}">selected</c:if>>Đang xử lí</option>
+                                                <option value="1" <c:if test="${requestScope.statusFilter == 1}">selected</c:if>>Đã duyệt</option>
+                                                <option value="2" <c:if test="${requestScope.statusFilter == 2}">selected</c:if>>Từ chối</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter-footer">
+                                        <button type="submit" class="btn-search">
+                                            <i class="fa-solid fa-magnifying-glass"></i> Search
+                                        </button>
+                                        <button type="reset" class="btn-reset" onclick="resetFilter()">
+                                            <i class="fa-solid fa-rotate-left"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
 
@@ -190,5 +235,7 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
+            
+            <script src="/company/js/filter.js"></script>
         </body>
     </html>

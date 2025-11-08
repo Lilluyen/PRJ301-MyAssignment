@@ -19,6 +19,7 @@ import model.Division;
 import model.RequestForLeave;
 import model.iam.Role;
 import model.iam.User;
+import utility.IDValidator;
 
 /**
  *
@@ -49,7 +50,11 @@ public class EditController extends BaseAuthorizationController {
 
     @Override
     protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        int requestId = Integer.parseInt(req.getParameter("id"));
+        String requestIDRaw = req.getParameter("id");
+        int requestId = -1;
+        if (IDValidator.isValid(requestIDRaw)) {
+            requestId = Integer.parseInt(requestIDRaw);
+        }
         RequestForLeaveDBContext reqForLeaveDB = new RequestForLeaveDBContext();
         RoleDBContext roleDB = new RoleDBContext();
         DivisionDBContext divisionDB = new DivisionDBContext();

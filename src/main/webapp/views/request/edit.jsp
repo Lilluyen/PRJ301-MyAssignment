@@ -16,80 +16,74 @@
         <link href="/company/css/review.css" rel="stylesheet" type="text/css"/>
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
         <title>Review - Request For Leave</title>
-
-        <script>
-            function edit() {
-                document.getElementById("fromDate").disabled = false;
-                document.getElementById("toDate").disabled = false;
-                document.getElementById("reason").disabled = false;
-                document.getElementById("role").disabled = false;
-                document.getElementById("department").disabled = false;
-                document.querySelector(".sendEdit").style.display = "block";
-            }
-        </script>
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
 
         <header>
             <%@ include file="../common/navbar.jspf" %>
         </header>
 
-        <div class="create-request container">
-            <h2>Leave Request Form</h2>
-            <div class="row">
-                <form action="edit" method="post" class="col-md-6">
-                    <input type="hidden" name="id" id="id" value="${param.id}"/>
-                    <div class="form-group">
-                        <label for="employeeName">Employee Name:</label>
-                        <input type="text" id="employeeName" name="employeeName" value="${requestScope.requestInfo.createdBy.fullName}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role:</label>
-                        <select name="role" id="role" required>
-                            <c:forEach var="r"  items="${requestScope.roles}">
-                                <option value="${r.id}">${r.roleName}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
+        <div class="create-request container flex-fill">
+            <c:if test="${requestScope.requestInfo != null}">
+                <h2 class="create-request-title">Leave Request Form</h2>
+                <div class="row">
+                    <form action="edit" method="post" class="col-md-6">
+                        <input type="hidden" name="id" id="id" value="${param.id}"/>
+                        <div class="form-group">
+                            <label for="employeeName">Employee Name:</label>
+                            <input type="text" id="employeeName" name="employeeName" value="${requestScope.requestInfo.createdBy.fullName}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role:</label>
+                            <select name="role" id="role" required>
+                                <c:forEach var="r"  items="${requestScope.roles}">
+                                    <option value="${r.id}">${r.roleName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="department">Department:</label>
-                        <select name="department" id="department">
-                            <c:forEach var="d" items="${requestScope.divisions}">
-                                <option 
-                                    <c:if test="${sessionScope.auth.employee.division.id == d.id}">
-                                        selected
-                                    </c:if>
-                                    value="${d.id}">${d.departmentName}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="department">Department:</label>
+                            <select name="department" id="department">
+                                <c:forEach var="d" items="${requestScope.divisions}">
+                                    <option 
+                                        <c:if test="${sessionScope.auth.employee.division.id == d.id}">
+                                            selected
+                                        </c:if>
+                                        value="${d.id}">${d.departmentName}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="fromDate">From Date:</label>
-                        <input type="date" id="fromDate" name="fromDate" value="${requestScope.requestInfo.fromDate}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="toDate">To Date:</label>
-                        <input type="date" id="toDate" name="toDate" value="${requestScope.requestInfo.toDate}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">Reason:</label>
-                        <textarea id="reason" name="reason" required>${requestScope.requestInfo.reason}</textarea>
-                    </div>
-                    <input type="submit" value="Save">
-                </form>
-                <section class="response-message col-md-6">
-                    <p><strong>Note:</strong> Before taking leave, employees must complete the handover of their work and obtain the signature confirmation from the person receiving the handover.
-                        The Human Resources Department will keep the leave record based on the duly approved leave request form.</p>
-                    <img src="/company/img/nghiphep2.svg" alt="Leave Image" class="img-fluid"/>
-                </section>
-            </div>
+                        <div class="form-group">
+                            <label for="fromDate">From Date:</label>
+                            <input type="date" id="fromDate" name="fromDate" value="${requestScope.requestInfo.fromDate}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="toDate">To Date:</label>
+                            <input type="date" id="toDate" name="toDate" value="${requestScope.requestInfo.toDate}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reason">Reason:</label>
+                            <textarea id="reason" name="reason" required>${requestScope.requestInfo.reason}</textarea>
+                        </div>
+                        <input type="submit" value="Save">
+                    </form>
+                    <section class="response-message col-md-6">
+                        <p><strong>Note:</strong> Before taking leave, employees must complete the handover of their work and obtain the signature confirmation from the person receiving the handover.
+                            The Human Resources Department will keep the leave record based on the duly approved leave request form.</p>
+                        <img src="/company/img/nghiphep2.svg" alt="Leave Image" class="img-fluid"/>
+                    </section>
+                </div>
+            </c:if>
+            <c:if test="${requestScope.requestInfo == null}">
+                <h2 class="error-message">No Request Is Available</h2>
+            </c:if>
         </div>
 
 
-        <footer class="footer">
+        <footer class="footer mt-auto">
             <div class="container">
                 <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
             </div>

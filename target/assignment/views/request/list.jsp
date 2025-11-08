@@ -13,148 +13,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="/company/css/background.css" rel="stylesheet" type="text/css"/>
         <link href="/company/css/navbar.css" rel="stylesheet" type="text/css"/>
-        <style>
+        <link href="/company/css/list.css" rel="stylesheet" type="text/css"/>
 
-
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                color: #333;
-            }
-            .list-table {
-                text-align: center;
-                margin-top: 70px;
-                margin-bottom: 50px;
-                background-color: #ffffff;
-                padding: 20px 30px 70px 30px;
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(10px);
-                color: black;
-                box-sizing: border-box;
-                position: relative;
-            }
-            h2{
-                margin-top: 35px;
-            }
-
-            /* ===== Table ===== */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 25px;
-                background-color: #ffffff;
-            }
-
-            th, td {
-                text-align: center;
-                padding: 12px 10px;
-                border: 1px solid #dee2e6;
-                font-weight: 500;
-            }
-
-            th {
-                background-color: #007bff;
-                color: white;
-                font-weight: 600;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f9fbfd;
-            }
-
-            tr:hover {
-                background-color: #eef3ff;
-            }
-
-            td:first-child {
-                font-weight: 600;
-                color: #2b2b2b;
-            }
-
-            .btn-info {
-                color: #ffffff;
-                text-decoration: none;
-                display: block;
-                padding: 15px 10px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .btn-info:hover {
-                background-color: #000000ff;
-                color: #ffffff;
-            }
-
-            .message-table{
-                margin-top: 10%;
-            }
-
-
-            /* ===== Status Colors ===== */
-            td.status {
-                font-weight: 600;
-                border-radius: 5px;
-            }
-            .status.processing {
-                color: #ff9800;
-            }
-            .status.approved {
-                color: #28a745;
-            }
-            .status.rejected {
-                color: #dc3545;
-            }
-
-            .pagger{
-                position: absolute;
-                bottom: 15px;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            header, footer{
-                animation: fadeInUp 0.7s ease forwards;
-            }
-
-
-            /* ===== Footer ===== */
-            .footer {
-                background: linear-gradient(135deg, #007bff, #00bcd4);
-                color: white;
-                text-align: center;
-                padding: 25px 10px;
-                font-size: 0.95rem;
-                border-top: 1px solid rgba(255, 255, 255, 0.08);
-                margin-top: auto;
-            }
-
-            .footer p {
-                margin: 0;
-                font-size: 1.1rem;
-                font-weight: 500;
-            }
-
-            .footer span {
-                color: #ffe082;
-            }
-
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(25px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        </style>
         <title>List - Request For Leave</title>
     </head>
     <body class="d-flex flex-column min-vh-100">
@@ -162,8 +25,15 @@
             <%@ include file="../common/navbar.jspf" %>
         </header>
         <div class="list-table container flex-fill">
+
             <h2>List - Request For Leave</h2>
-            <table border="1">
+            <button class="btn-filter" onclick="openFilter()">
+                <i class="fa-solid fa-filter"></i> Filter
+            </button>
+            <%-- <form action="list" class="form-filter" method="post"> --%>
+
+            <%-- </form> --%>
+            <table border="1" class="table-data">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -208,7 +78,70 @@
                 </c:if>
 
                 <div class="pagger">
-                    <jsp:include page="../common/pagger.jsp"></jsp:include>
+                    <form class="pagination-form" action="${requestScope.action}" method="${requestScope.method}">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button type="submit" name="page" value="${requestScope.pageindex - 1}" class="page-link" ${requestScope.pageindex <= 1 ? 'disabled' : ''}>&laquo;</button>
+                            </li>
+
+                            <li class="page-item active">
+                                <span class="page-link">${requestScope.pageindex}</span>
+                            </li>
+
+                            <li class="page-item">
+                                <span class="page-link">/ ${requestScope.totalpage}</span>
+                            </li>
+
+                            <li class="page-item">
+                                <button type="submit" name="page" value="${requestScope.pageindex + 1}" class="page-link" ${requestScope.pageindex >= requestScope.totalpage ? 'disabled' : ''}>&raquo;</button>
+                            </li>
+                        </ul>
+
+                        <div class="form-filter">
+                            <div class="filter-header">
+                                <h4>Filter Request</h4>
+                                <button type="button" class="btn-cancel" onclick="closeFilter()">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <div class="filter-body">
+                                <div class="form-group">
+                                    <label for="name">Name:</label>
+                                    <input type="text" id="name" name="name" value="${requestScope.nameFilter != null ? requestScope.nameFilter : ""}" placeholder="Enter name">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fromDate">From Date:</label>
+                                    <input type="date" name="fromDate" id="fromDate" value="${requestScope.fromDateFilter != null ? requestScope.fromDateFilter : ""}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="toDate">To Date:</label>
+                                    <input type="date" name="toDate" id="toDate" value="${requestScope.toDateFilter != null ? requestScope.toDateFilter : ""}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status">Status:</label>
+                                    <select name="status" id="status">
+                                        <option value="3" selected>Tất cả</option>
+                                        <option value="0" <c:if test="${requestScope.statusFilter == 0}">selected</c:if>>Đang xử lí</option>
+                                        <option value="1" <c:if test="${requestScope.statusFilter == 1}">selected</c:if>>Đã duyệt</option>
+                                        <option value="2" <c:if test="${requestScope.statusFilter == 2}">selected</c:if>>Từ chối</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="filter-footer">
+                                <button type="submit" class="btn-search">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                                </button>
+                                <button type="reset" class="btn-reset" onclick="resetFilter()">
+                                    <i class="fa-solid fa-rotate-left"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -220,5 +153,6 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
+            <script src="/company/js/filter.js"></script>
         </body>
     </html>

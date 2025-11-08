@@ -1,85 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../css/review.css">
-    <title>Create </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="../css/background.css" rel="stylesheet" type="text/css" />
+    <link href="../css/navbar.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        .edit-button button{
-            margin-top: 20px;
-            text-align: right;
-            padding: 10px 20px;
-            background: linear-gradient(90deg, #4dabf7, #901b79);
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    <link href="../../css/list.css" rel="stylesheet" type="text/css" />
+    <title>List - Request For Leave</title>
 
-        .edit-button button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(77, 171, 247, 0.6);
-        }
-    </style>
+
 </head>
-<body>
-    <div class="create-request">
-        <h2>Leave Request Form</h2>
-        <form action="create" method="post">
-            <div class="form-group">
-                <label for="employeeName">Employee Name:</label>
-                <input type="text" id="employeeName" name="employeeName" value="dsaddw" required disabled>
-            </div>
-            <div class="form-group">
-                <label for="role">Role:</label>
-                <select name="role" id="role" required>
-                    <option value="Developer">Developer</option>
-                    <option value="Manager">Manager</option>
-                    <option value="HR">HR</option>
-                    <option value="QA">QA</option>
-                </select>
-            </div>
 
-            <div class="form-group">
-                <label for="department">Department:</label>
-                <select name="department" id="department">
-                    <option value="IT">IT</option>
-                    <option value="Sales">Sales</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Finance">Finance</option>
-                </select>
+<body class="d-flex flex-column min-vh-100">
+    <!-- <header>
+        <%@ include file="../common/navbar.jspf" %>
+    </header> -->
+    <div class="list-table container flex-fill">
+        
+        <h2>List - Request For Leave</h2>
+        <button class="btn-filter" onclick="openFilter()">
+            <i class="fa-solid fa-filter"></i> Filter
+        </button>
+        <form action="" class="form-filter">
+            <div class="filter-header">
+                <h4>Filter Request</h4>
+                <button type="button" class="btn-cancel" onclick="closeFilter()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-
-            <div class="form-group">
-                <label for="fromDate">From Date:</label>
-                <input type="date" id="fromDate" name="fromDate" required>
-            </div>
-            <div class="form-group">
-                <label for="toDate">To Date:</label>
-                <input type="date" id="toDate" name="toDate" required>
-            </div>
-            <div class="form-group">
-                <label for="reason">Reason:</label>
-                <textarea id="reason" name="reason" required></textarea>
-            </div>
-            <div class="form-submit" style="display: none;">
+        
+            <div class="filter-body">
                 <div class="form-group">
-                    <label for="not">Note:</label>
-                    <textarea id="note" name="note" required></textarea>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter name">
                 </div>
-                <div class="submit-button">
-                    <input type="submit" value="Approve">
-                    <input type="submit" value="Reject">
+        
+                <div class="form-group">
+                    <label for="fromDate">From Date:</label>
+                    <input type="date" name="fromDate" id="fromDate">
+                </div>
+        
+                <div class="form-group">
+                    <label for="toDate">To Date:</label>
+                    <input type="date" name="toDate" id="toDate">
+                </div>
+        
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        <option value="0" selected>Process</option>
+                        <option value="1">Approved</option>
+                        <option value="2">Rejected</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="edit-button" style="">
-                <button type="button" onclick="edit()">Edit</button>
+        
+            <div class="filter-footer">
+                <button type="submit" class="btn-search">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
+                <button type="reset" class="btn-reset" onclick="resetFilter()">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
             </div>
         </form>
+        <table border="1" class="table-data">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Employee Name</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Processed By</th>
+                    <th>Processed Time</th>
+                    <th>Note</th>
+                    <th>View Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:if test="${not empty requestScope.requestList}">
+
+                    <c:forEach var="r" items="${requestScope.requestList}" varStatus="loop">
+                        <tr>
+                            <td>${loop.index + 1}</td>
+                            <td>${r.createdBy.fullName}</td>
+                            <td>${r.reason}</td>
+                            <td class="status
+                                    ${r.status eq 0 ? 'processing' :
+                                      r.status eq 1 ? 'approved' :
+                                      'rejected'}">
+                                ${r.status eq 0 ? "Đang xử lý" :
+                                r.status eq 1 ? "Đã duyệt" :
+                                "Từ chối"}
+                            </td>
+                            <td>${r.processedBy.fullName}</td>
+                            <td>${r.processedTime}</td>
+                            <td>${r.note}</td>
+                            <td><a href="review?id=${r.id}" class="btn btn-info">View Details</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+
+                </c:if>
+            </tbody>
+        </table>
+
+        <c:if test="${empty requestScope.requestList}">
+            <h3 class="message-table">No request is available</h3>
+        </c:if>
+
+        <div class="pagger">
+            <jsp:include page="../common/pagger.jsp"></jsp:include>
+        </div>
     </div>
+
+    <footer class="footer mt-auto">
+        <div class="container">
+            <p>&copy; 2025 Cambodia Company. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+        <script src="../../js/filter.js"></script>
 </body>
+
 </html>

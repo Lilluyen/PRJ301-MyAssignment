@@ -19,6 +19,8 @@ import model.Division;
 import model.RequestForLeave;
 import model.iam.Role;
 import model.iam.User;
+import utility.DateValidator;
+import utility.StatusValidator;
 
 /**
  *
@@ -26,13 +28,13 @@ import model.iam.User;
  */
 @WebServlet(urlPatterns = "/request/create")
 public class CreateController extends BaseAuthorizationController {
-    
+
     @Override
     protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         RequestForLeave requestForLeave = new RequestForLeave();
-        
+
         requestForLeave.setCreatedBy(user.getEmployee());
-        
+
         Role role = new Role();
         role.setId(Integer.parseInt(req.getParameter("role")));
         requestForLeave.setRole(role);
@@ -40,31 +42,54 @@ public class CreateController extends BaseAuthorizationController {
         requestForLeave.setToDate(Date.valueOf(req.getParameter("toDate")));
         requestForLeave.setReason(req.getParameter("reason"));
         requestForLeave.setStatus(0);
-        
+
         RequestForLeaveDBContext db = new RequestForLeaveDBContext();
         db.insert(requestForLeave);
         resp.sendRedirect(req.getContextPath() + "/request/create");
     }
-    
+
     @Override
     protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+
+        String fromDateRaw = req.getParameter("fromDate");
+        String toDateRaw = req.getParameter("toDate");
+        String statusRaw = req.getParameter("status");
+        Integer status = null;
+        if (StatusValidator.isValid(statusRaw)) {
+            status = Integer.parseInt(statusRaw);
+            if (status >= 3) {
+                status = null;
+            }
+        }
+
+        Date fromDate = null;
+        Date toDate = null;
+
+        if (fromDateRaw != null && DateValidator.isValidSqlDate(fromDateRaw)) {
+            fromDate = Date.valueOf(fromDateRaw);
+        }
+
+        if (toDateRaw != null && DateValidator.isValidSqlDate(toDateRaw)) {
+            toDate = Date.valueOf(toDateRaw);
+        }
+
         DivisionDBContext divisionDB = new DivisionDBContext();
         RoleDBContext roleDB = new RoleDBContext();
         ArrayList<Division> listDivisions = divisionDB.list();
         ArrayList<Role> listRoles = roleDB.getRolesByUserIDNotDuplicate(user.getId());
-        
+
         int userId = user.getId();
-        
+
         int pagesize = 5;
         String page = req.getParameter("page");
         page = (page == null) ? "1" : page;
         int pageindex = Integer.parseInt(page);
 
         RequestForLeaveDBContext leaveDB = new RequestForLeaveDBContext();
-        ArrayList<RequestForLeave> leavesRequestList = leaveDB.getByEmployee(userId, pageindex, pagesize);
-        
+        ArrayList<RequestForLeave> leavesRequestList = leaveDB.getByEmployee(userId, pageindex, pagesize, fromDate, toDate, status);
+
         leaveDB = new RequestForLeaveDBContext();
-        int count = leaveDB.countOwn(user.getId());
+        int count = leaveDB.countOwn(user.getId(), fromDate, toDate, status);
 
         int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
 
@@ -72,10 +97,13 @@ public class CreateController extends BaseAuthorizationController {
         req.setAttribute("pageindex", pageindex);
         req.setAttribute("action", "create");
         req.setAttribute("method", "get");
+        req.setAttribute("fromDateFilter", fromDate);
+        req.setAttribute("toDateFilter", toDate);
+        req.setAttribute("statusFilter", status);
         req.setAttribute("requestList", leavesRequestList);
         req.setAttribute("divisions", listDivisions);
         req.setAttribute("roles", listRoles);
         req.getRequestDispatcher("/views/request/create.jsp").forward(req, resp);
     }
-    
+
 }
